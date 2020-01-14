@@ -207,7 +207,7 @@ function calculate_price() {
         rental_prices[index].options = {};
         rental_prices[index].options.deductibleReduction = rental.options.deductibleReduction;
         if (rental_prices[index].options.deductibleReduction) {
-            rental_prices[index].price += 4 * days;
+            rental_prices[index].commision.virtuo += 4 * days;
         }
     }
     return rental_prices;
