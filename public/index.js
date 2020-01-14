@@ -195,20 +195,61 @@ function calculate_price() {
         }
 
         // STEP 3
-        rental_prices[index].commision = {};
+        rental_prices[index].commission = {};
         var comission_total = rental_prices[index].price * 0.3;
-        rental_prices[index].commision.insurance = comission_total * 0.5;
-        rental_prices[index].commision.treasury = days * 1;
-        rental_prices[index].commision.virtuo = comission_total
-            - rental_prices[index].commision.insurance
-            - rental_prices[index].commision.treasury;
+        rental_prices[index].commission.insurance = comission_total * 0.5;
+        rental_prices[index].commission.treasury = days * 1;
+        rental_prices[index].commission.virtuo = comission_total
+            - rental_prices[index].commission.insurance
+            - rental_prices[index].commission.treasury;
 
         // STEP 4
         rental_prices[index].options = {};
         rental_prices[index].options.deductibleReduction = rental.options.deductibleReduction;
         if (rental_prices[index].options.deductibleReduction) {
-            rental_prices[index].commision.virtuo += 4 * days;
+            rental_prices[index].commission.virtuo += 4 * days;
         }
+
+        // custom
+        rental_prices[index].final_price_partner = rental_prices[index].price
+            - rental_prices[index].commission.insurance
+            - rental_prices[index].commission.treasury
+            - rental_prices[index].commission.virtuo;
     }
     return rental_prices;
+}
+
+var p = payment();
+console.log(p);
+
+// STEP 5
+function payment() {
+
+    var rentals_prices = calculate_price();
+    for (var index in actors) {
+        for (var index2 in rentals_prices) {
+            if (actors[index].rentalId === rentals_prices[index2].id) {
+                for (var index3 in actors[index].payment) {
+                    switch (actors[index].payment[index3].who) {
+                        case "driver":
+                            actors[index].payment[index3].amount = rentals_prices[index2].price;
+                            break;
+                        case "partner":
+                            actors[index].payment[index3].amount = rentals_prices[index2].final_price_partner;
+                            break;
+                        case "insurance":
+                            actors[index].payment[index3].amount = rentals_prices[index2].commission.insurance;
+                            break;
+                        case "treasury":
+                            actors[index].payment[index3].amount = rentals_prices[index2].commission.treasury;
+                            break;
+                        case "virtuo":
+                            actors[index].payment[index3].amount = rentals_prices[index2].commission.virtuo;
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    return actors;
 }
