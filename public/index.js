@@ -193,6 +193,16 @@ function calculate_price() {
         else if (days > 1) {
             rental_prices[index].price -= rental_prices[index].price * 0.1;
         }
+
+        // STEP 3
+        rental_prices[index].commision = {};
+        var comission_total = rental_prices[index].price * 0.3;
+        rental_prices[index].commision.insurance = comission_total * 0.5;
+        rental_prices[index].commision.treasury = days * 1;
+        rental_prices[index].commision.virtuo = comission_total
+            - rental_prices[index].commision.insurance
+            - rental_prices[index].commision.treasury;
+
     }
     return rental_prices;
 }
