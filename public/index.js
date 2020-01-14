@@ -203,6 +203,12 @@ function calculate_price() {
             - rental_prices[index].commision.insurance
             - rental_prices[index].commision.treasury;
 
+        // STEP 4
+        rental_prices[index].options = {};
+        rental_prices[index].options.deductibleReduction = rental.options.deductibleReduction;
+        if (rental_prices[index].options.deductibleReduction) {
+            rental_prices[index].price += 4 * days;
+        }
     }
     return rental_prices;
 }
