@@ -163,34 +163,36 @@ const actors = [{
 //console.log(rentals);
 //console.log(actors);
 
-var c = step1();
+var c = calculate_price();
 console.log(c);
 
-function step1() {
+function calculate_price() {
     var rental_prices = [];
     for (var index in rentals) {
         var rental = rentals[index];
         rental_prices[index] = {};
         var date_pickup = new Date(rental.pickupDate);
         var date_return = new Date(rental.returnDate);
-        //console.log(date_pickup);
-        //console.log(date_return);
+
         var days = date_return.getDate() - date_pickup.getDate() + 1;
         var km = rental.distance;
-        //console.log(rental);
         var car = cars.find(element => element.id === rental.carId);
-        //console.log(car);
+
         var price_time = days * car.pricePerDay;
         var price_distance = km * car.pricePerKm;
         rental_prices[index].id = rental.id;
         rental_prices[index].price = price_time + price_distance;
+
+        // STEP 2
+        if (days > 10) {
+            rental_prices[index].price -= rental_prices[index].price * 0.5;
+        }
+        else if (days > 4) {
+            rental_prices[index].price -= rental_prices[index].price * 0.3;
+        }
+        else if (days > 1) {
+            rental_prices[index].price -= rental_prices[index].price * 0.1;
+        }
     }
-    return rental_prices;
-}
-
-
-function step2() {
-    var rental_prices = step1();
-    //for 
     return rental_prices;
 }
